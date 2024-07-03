@@ -3,7 +3,7 @@
 @section('content')
     <div class="container pt-5">
 
-        <h1 class="mb-5">Asignacion de Docente a Grupos</h1>
+        <h1 class="mb-3">Asignacion de Docente a Grupos</h1>
 
         <div class="row">
             <div class="col-sm-4">
@@ -107,9 +107,7 @@
                 
                 form.docente_id.value = docenteGrupo.docente_id;
                 form.group_id.value = docenteGrupo.group_id;
-
-                console.log("🚀 ~ setModalForm ~ form:", docenteGrupo)
-                debugger;
+                
                 submitBtn.innerText = 'Guardar cambios';
             }
         }

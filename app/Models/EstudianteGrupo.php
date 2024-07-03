@@ -10,10 +10,12 @@ class EstudianteGrupo extends Model
     use HasFactory;
 
     protected $table = 'estudiante_grupo';
+    public $timestamps = false;
+
 
     protected $fillable = [
         'estudiante_id',
-        'grupo_id',
+        'group_id',
     ];
 
     public function estudiante()
@@ -23,6 +25,6 @@ class EstudianteGrupo extends Model
 
     public function grupo()
     {
-        return $this->belongsTo(Grupo::class);
+        return $this->belongsTo(Grupo::class, 'group_id');
     }
 }

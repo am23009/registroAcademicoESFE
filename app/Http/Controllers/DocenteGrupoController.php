@@ -34,7 +34,6 @@ class DocenteGrupoController extends Controller
             return redirect()->route('docente_grupos.index')
                              ->with('success', 'Docente asignado a grupo exitosamente.');
         } catch (\Throwable $th) {
-            dd($th);
             return redirect()->route('docente_grupos.index')
                              ->with('error', 'Error al asignar docente a grupo.');
             
