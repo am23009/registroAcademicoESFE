@@ -7,9 +7,15 @@ use Illuminate\Http\Request;
 
 class EstudianteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $estudiantes = Estudiante::all();
+        $query = Estudiante::query();
+
+        if ($request->filled('nombre')) {
+            $query->where('nombre', 'like', '%' . $request->nombre . '%');
+        }
+
+        $estudiantes = $query->orderBy('id', 'desc')->simplePaginate(10);
         return view('estudiantes.index', compact('estudiantes'));
     }
 

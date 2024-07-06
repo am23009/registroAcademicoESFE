@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Docente;
 use Illuminate\Http\Request;
-use Iluminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException; // Asegúrate de importar esta clase
+use Illuminate\Support\Facades\Log; // Para loguear la excepción
 
 class DocenteController extends Controller
 {
@@ -54,8 +56,9 @@ class DocenteController extends Controller
         ]);
 
         $data = $request->only(['nombre', 'apellido', 'email']);
+        
         if ($request->filled('password')) {
-            $data['password'] = $request->password;
+            $data['password'] = Hash::make($request->password);
         }
 
         $docente->update($data);
@@ -66,10 +69,24 @@ class DocenteController extends Controller
 
     public function destroy(Docente $docente)
     {
-        $docente->delete();
+        try {
 
-        return redirect()->route('docentes.index')
-                         ->with('success', 'Docente eliminado exitosamente.');
+            $docente->delete();
+
+            return redirect()->route('docentes.index')
+                             ->with('success', 'Docente eliminado exitosamente.');
+        } catch (QueryException $e) {
+
+            if ($e->getCode() == '23000') { // Código de error para violación de restricción de clave foránea
+                return redirect()->route('docentes.index')
+                                 ->withError('No se puede eliminar el docente porque está asociado a uno o más grupos.');
+            }
+
+            // Para otros tipos de excepciones
+            return redirect()->route('docentes.index')
+                             ->withError('error', 'Ocurrió un error al intentar eliminar el docente.');
+
+        }    
     }
 
     public function login(Request $request){

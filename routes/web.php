@@ -16,6 +16,7 @@ Route::get('/', function () {
     return view('home');
 });
 
+require __DIR__.'/asistencia_routes.php';
 require __DIR__.'/docente_routes.php';
 require __DIR__.'/grupo_routes.php';
 require __DIR__.'/estudiante_routes.php';

@@ -5,11 +5,16 @@
 
         <h1 class="mb-3">Asignacion de Docente a Grupos</h1>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <input type="text" class="form-control" name="nombre" placeholder="Nombre">
+        <form method="GET" action="{{ route('docente_grupos.index') }}">
+            <div class="row">
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="search" placeholder="Buscar" value="{{ request('search') }}">
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
             </div>
-        </div>
+        </form>
         <br>
         
         @if ($message = Session::get('success'))

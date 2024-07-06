@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EstudianteController;
 
-Route::group(['prefix'=>'estudiantes'], function(){
+Route::group(['prefix'=>'estudiantes',  'middleware'=>'auth_docentes'], function(){
     Route::get('/', [EstudianteController::class, 'index'])->name('estudiantes.index');
     Route::post('/', [EstudianteController::class, 'store'])->name('estudiantes.store');
     Route::put('/{estudiante}', [EstudianteController::class, 'update'])->name('estudiantes.update');

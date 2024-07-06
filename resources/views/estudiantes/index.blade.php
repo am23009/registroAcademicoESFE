@@ -1,21 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container pt-5">
     <h1>Lista de Estudiantes</h1>
     
-    <div class="row">
-        <div class="col-sm-4">
-            <input type="text" class="form-control" name="nombre" placeholder="Nombre">
+    <form method="GET" action="{{ route('estudiantes.index') }}">
+        <div class="row">
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="nombre" placeholder="Nombre" value="{{ request('nombre') }}">
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
         </div>
-    </div>
+    </form>
     <br>
     
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             {{ $message }}
         </div>
-        <br>
+    @endif
+
+    @if ($message = Session::get('error'))
+        <div class="alert alert-danger">
+            {{ $message }}
+        </div>
     @endif
 
     <div class="row">
@@ -48,10 +58,10 @@
                 <td>
                     <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ameEstudiante"
                     onclick="setModalForm('edit', {{ $estudiante }})">Editar</button>
-                    <form action="{{ route('estudiantes.destroy', $estudiante->id) }}" method="POST" style="display:inline;">
+                    <form action="{{ route('estudiantes.destroy', $estudiante->id) }}" method="POST" style="display: inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar esta relación?')">Eliminar</button>
                     </form>
                 </td>
             </tr>

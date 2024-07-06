@@ -8,11 +8,24 @@ use App\Models\Docente;
 
 class DocenteGrupoController extends Controller
 {
-    public function index()
-    { 
-        $docenteGrupos = $docenteGrupos = DocenteGrupo::with('docente', 'grupo')->simplePaginate(10);
+    public function index(Request $request)
+    {
+        $query = DocenteGrupo::with('docente', 'grupo');
 
-        $grupos = Grupo::all(); 
+        if ($request->filled('search')) {
+           
+            $search = $request->input('search');
+           
+            $query->whereHas('docente', function ($q) use ($search) {
+                $q->where('nombre', 'like', '%' . $search . '%');
+            })->orWhereHas('grupo', function ($q) use ($search) {
+                $q->where('nombre', 'like', '%' . $search . '%');
+            });
+        }
+
+        $docenteGrupos = $query->orderBy('id', 'desc')->simplePaginate(10);
+
+        $grupos = Grupo::all();
         $docentes = Docente::all();
 
         return view('docente_grupos.index', compact('docenteGrupos', 'grupos', 'docentes'));
@@ -69,9 +82,18 @@ class DocenteGrupoController extends Controller
                         ->with('success', 'Docente asignado a grupo actualizado exitosamente.');
     }
 
-    public function destroy(DocenteGrupo $docenteGrupo)
+    public function destroy($id)
     {
-        $docenteGrupo->delete();
+        // dd($request->all());
+
+        $docente_grupo = DocenteGrupo::find($id);
+
+        if (!$docente_grupo) {
+            return redirect()->route('docente_grupos.index')
+                            ->with('error', 'El registro no pudo ser encontrado.');
+        }
+
+        $docente_grupo->delete();
 
         return redirect()->route('docente_grupos.index')
                          ->with('success', 'Docente asignado a grupo eliminado exitosamente.');
