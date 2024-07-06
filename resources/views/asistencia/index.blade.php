@@ -6,6 +6,22 @@
             <h1 class="display-4">Registrar Asistencia</h1>
             <p class="lead">Ingrese el PIN del estudiante para registrar su asistencia.</p>
             <hr class="my-4">
+
+            @if (session('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            
+
+
             <form action="{{ route('asistencia.store') }}" method="POST">
                 @csrf
                 <div class="mb-3">

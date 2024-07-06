@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asistencia;
 use Illuminate\Http\Request;
 use App\Models\Estudiante;
+use App\Models\EstudianteGrupo;
 use App\Models\Grupo;
 
 class AsistenciaController extends Controller
@@ -28,13 +29,15 @@ class AsistenciaController extends Controller
         ]);
     
         $estudiante = Estudiante::where('pin', $request->pin)->first();
-    
+
         if (!$estudiante) {
-            return redirect()->back()->with('error', 'No se encontró ningún estudiante con el PIN proporcionado.');
+            return redirect()->back()->withError('No se encontró ningún estudiante con el PIN proporcionado.');
         }
-    
-        $grupo_id = $estudiante->grupo_id;
-    
+
+        $estudianteGrupo = EstudianteGrupo::where('estudiante_id', $estudiante->id)->first();
+        
+        $grupo_id = $estudianteGrupo->group_id;
+        
         $asistencia = new Asistencia();
     
         $asistencia->estudiante_id = $estudiante->id;
@@ -44,7 +47,7 @@ class AsistenciaController extends Controller
     
         $asistencia->save();
     
-        return redirect()->route('asistencias.index')->with('success', 'Asistencia registrada exitosamente.');
+        return redirect()->route('asistencia.index')->with('success', 'Asistencia registrada exitosamente.');
     }
 
     public function update(Request $request, Asistencia $asistencia)
